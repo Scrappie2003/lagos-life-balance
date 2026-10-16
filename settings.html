@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings — Lagos Life Balance</title>
+  <style>
+    body { font-family: system-ui, sans-serif; background: #101611; color: #f6f1e6; margin: 0; padding: 20px; }
+    .container { max-width: 520px; margin: 0 auto; }
+    h1 { color: #e2b34a; }
+    a { color: #3daba3; }
+    label { display: block; margin: 16px 0 6px; font-weight: 500; }
+    input, select { width: 100%; padding: 12px; font-size: 1.05rem; border-radius: 8px; border: 1px solid #3daba3; background: #18241c; color: #f6f1e6; box-sizing: border-box; }
+    button { background: #e2b34a; color: #101611; border: none; padding: 14px 24px; margin: 12px 8px 8px 0; border-radius: 8px; font-size: 1rem; cursor: pointer; }
+    button:hover { background: #f0c45a; }
+    .btn-secondary { background: #18241c; color: #f6f1e6; border: 1px solid #3daba3; }
+    .current { font-size: 1.8rem; color: #3daba3; font-weight: bold; margin: 12px 0 24px; }
+    .msg { margin-top: 16px; padding: 12px; border-radius: 8px; background: #18241c; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <p><a href="index.html">← Back to Lagos Life</a></p>
+    <h1>⚙️ Settings</h1>
+
+    <div class="current" id="currentBalance">Current: ₦1,000,000,000</div>
+
+    <label for="newBalance">Set exact balance (₦)</label>
+    <input type="number" id="newBalance" min="0" step="1" value="1000000000">
+
+    <label for="addAmount">Add or subtract amount</label>
+    <input type="number" id="addAmount" step="1" value="1000000" placeholder="Positive to add, negative to subtract">
+
+    <div>
+      <button onclick="saveExact()">Save Exact Balance</button>
+      <button onclick="applyAdd()">Apply Add/Subtract</button>
+      <button class="btn-secondary" onclick="resetToDefault()">Reset to ₦1B</button>
+    </div>
+
+    <div id="msg" class="msg" style="display:none;"></div>
+
+    <p style="margin-top: 32px; opacity: 0.7;">Changes are saved in this browser and apply immediately to the main page.</p>
+  </div>
+
+  <script>
+    function loadBalance() {
+      return parseInt(localStorage.getItem('lagosBalance')) || 1000000000;
+    }
+
+    function saveBalance(val) {
+      const n = Math.max(0, Math.floor(Number(val)));
+      localStorage.setItem('lagosBalance', n);
+      updateDisplay();
+      showMsg('Balance updated to ₦' + n.toLocaleString());
+    }
+
+    function updateDisplay() {
+      const b = loadBalance();
+      document.getElementById('currentBalance').textContent = 'Current: ₦' + b.toLocaleString();
+      document.getElementById('newBalance').value = b;
+    }
+
+    function saveExact() {
+      const val = document.getElementById('newBalance').value;
+      if (val === '' || isNaN(val)) return showMsg('Enter a valid number');
+      saveBalance(val);
+    }
+
+    function applyAdd() {
+      const add = Number(document.getElementById('addAmount').value);
+      if (isNaN(add)) return showMsg('Enter a valid amount');
+      const next = loadBalance() + add;
+      saveBalance(next);
+    }
+
+    function resetToDefault() {
+      saveBalance(1000000000);
+    }
+
+    function showMsg(text) {
+      const el = document.getElementById('msg');
+      el.textContent = text;
+      el.style.display = 'block';
+      setTimeout(() => { el.style.display = 'none'; }, 2500);
+    }
+
+    updateDisplay();
+  </script>
+</body>
+</html>
