@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lagos Life — Your Balance</title>
+  <style>
+    body { font-family: system-ui, sans-serif; background: #101611; color: #f6f1e6; margin: 0; padding: 20px; }
+    .container { max-width: 600px; margin: 0 auto; }
+    h1 { color: #e2b34a; }
+    .balance { font-size: 2.5rem; font-weight: bold; color: #3daba3; margin: 20px 0; }
+    button { background: #e2b34a; color: #101611; border: none; padding: 12px 24px; margin: 8px; border-radius: 8px; font-size: 1rem; cursor: pointer; }
+    button:hover { background: #f0c45a; }
+    input { padding: 10px; font-size: 1.1rem; border-radius: 6px; border: 1px solid #3daba3; background: #18241c; color: #f6f1e6; width: 200px; }
+    .locations { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 30px; }
+    .loc { background: #18241c; padding: 15px; border-radius: 10px; min-width: 120px; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🇳🇬 Lagos Life — Personal Balance</h1>
+    <p>Your own editable version. Not connected to the official lagoslife.app.</p>
+    
+    <div class="balance" id="balance">₦1,000,000,000</div>
+    
+    <div>
+      <input type="number" id="amount" placeholder="Amount" value="1000000000">
+      <button onclick="setBalance()">Set Balance</button>
+      <button onclick="addMoney(1000000)">+ ₦1M</button>
+      <button onclick="addMoney(100000000)">+ ₦100M</button>
+      <button onclick="addMoney(1000000000)">+ ₦1B</button>
+    </div>
+
+    <h2>Quick Actions</h2>
+    <button onclick="work()">Work Shift (+ ₦500k)</button>
+    <button onclick="payRent()">Pay Rent (-₦2M)</button>
+    <button onclick="buyCar()">Buy Car (-₦15M)</button>
+
+    <h2>Locations</h2>
+    <div class="locations">
+      <div class="loc">🎷 Afrika Shrine</div>
+      <div class="loc">⚽ Viewing Centre</div>
+      <div class="loc">🍲 Amala Shitta</div>
+      <div class="loc">💡 CcHub</div>
+      <div class="loc">🧳 Market</div>
+      <div class="loc">🎭 Freedom Park</div>
+      <div class="loc">🏋️ i-Fitness</div>
+      <div class="loc">🏢 Marina Towers</div>
+    </div>
+
+    <p style="margin-top: 40px; opacity: 0.7;">Balance saved in your browser. Edit freely.</p>
+  </div>
+
+  <script>
+    let balance = parseInt(localStorage.getItem('lagosBalance')) || 1000000000;
+
+    function updateDisplay() {
+      document.getElementById('balance').textContent = '₦' + balance.toLocaleString();
+      localStorage.setItem('lagosBalance', balance);
+    }
+
+    function setBalance() {
+      const val = parseInt(document.getElementById('amount').value);
+      if (!isNaN(val) && val >= 0) {
+        balance = val;
+        updateDisplay();
+      }
+    }
+
+    function addMoney(amount) {
+      balance += amount;
+      updateDisplay();
+    }
+
+    function work() { addMoney(500000); }
+    function payRent() { 
+      if (balance >= 2000000) balance -= 2000000; 
+      updateDisplay(); 
+    }
+    function buyCar() { 
+      if (balance >= 15000000) balance -= 15000000; 
+      updateDisplay(); 
+    }
+
+    updateDisplay();
+  </script>
+</body>
+</html>
